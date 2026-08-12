@@ -556,7 +556,14 @@
   function updateWhatsAppLinks(region){
     document.querySelectorAll('.wa-link').forEach(function(a){ a.href = 'https://wa.me/' + waNumbers[region]; });
     var ctaPhone = document.getElementById('ctaPhone');
-    if(ctaPhone) ctaPhone.textContent = waDisplay[region];
+    if(ctaPhone){
+      if(region === 'uk'){
+        ctaPhone.style.display = 'none';
+      } else {
+        ctaPhone.style.display = '';
+        ctaPhone.textContent = waDisplay[region];
+      }
+    }
   }
 
   function triggerTranslate(code, attempts){
