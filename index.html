@@ -3,6 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="google" content="notranslate">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%230B2B21'/%3E%3Cpolyline points='35,70 35,30 65,70 65,30' fill='none' stroke='%23C89B4A' stroke-width='9' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
 <title>NexusHouseNG — Business Registration, Compliance &amp; Web Development</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -137,9 +139,20 @@
   .disclaimer{font-size:12px;line-height:1.6;color:rgba(246,241,228,0.4);border-top:1px solid rgba(246,241,228,0.12);padding-top:18px;max-width:620px;}
   .footer-bottom{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:12px;}
   .copyright{font-size:11.5px;color:rgba(246,241,228,0.35);}
-  #google_translate_element{font-size:12px;}
-  #google_translate_element .goog-te-gadget{font-family:var(--font-mono) !important;color:rgba(246,241,228,0.5) !important;font-size:11px !important;}
-  .goog-te-gadget img{display:none !important;}
+  #google_translate_element{position:absolute;width:0;height:0;overflow:hidden;opacity:0;pointer-events:none;}
+  .goog-te-banner-frame{display:none !important;}
+  body{top:0 !important;}
+  .goog-tooltip, .goog-tooltip:hover{display:none !important;}
+  .goog-text-highlight{background:none !important;box-shadow:none !important;}
+
+  .lang-switch{position:relative;flex:none;}
+  .header-actions{display:flex;align-items:center;gap:10px;flex:none;}
+  .lang-btn{display:flex;align-items:center;gap:5px;background:transparent;border:1px solid var(--line);border-radius:100px;padding:8px 12px;font-family:var(--font-mono);font-size:12px;color:var(--ink-soft);cursor:pointer;}
+  .lang-btn:hover{border-color:var(--brass);color:var(--ink);}
+  .lang-menu{position:absolute;top:calc(100% + 8px);right:0;background:var(--paper);border:1px solid var(--line);border-radius:12px;box-shadow:0 16px 34px -12px rgba(11,43,33,0.35);padding:6px;display:none;flex-direction:column;min-width:170px;z-index:70;}
+  .lang-menu.open{display:flex;}
+  .lang-menu button{display:flex;align-items:center;gap:9px;background:none;border:none;text-align:left;padding:9px 10px;border-radius:7px;font-family:var(--font-body);font-size:13.5px;color:var(--ink);cursor:pointer;width:100%;}
+  .lang-menu button:hover{background:var(--paper-dim);}
 
   .wa-float{position:fixed;bottom:22px;right:22px;width:56px;height:56px;border-radius:50%;background:var(--wa);display:flex;align-items:center;justify-content:center;box-shadow:0 10px 24px rgba(0,0,0,0.3);z-index:60;transition:transform .2s ease;}
   .wa-float:hover{transform:scale(1.08);}
@@ -212,7 +225,24 @@
       <a href="#compliance">Compliance</a>
       <a href="#process">Process</a>
     </nav>
-    <a class="btn btn-sm wa-link" href="https://wa.me/2348169259805" target="_blank" rel="noopener"><svg><use href="#icon-wa"/></svg>WhatsApp</a>
+    <div class="header-actions">
+      <div class="lang-switch" id="langSwitch">
+        <button class="lang-btn" id="langBtn" type="button" aria-haspopup="true" aria-expanded="false">
+          <span id="langFlag">&#127760;</span><span id="langLabel">EN</span>
+        </button>
+        <div class="lang-menu" id="langMenu">
+          <button type="button" data-lang="en">&#127468;&#127463; English</button>
+          <button type="button" data-lang="fr">&#127467;&#127479; Fran&ccedil;ais</button>
+          <button type="button" data-lang="es">&#127466;&#127480; Espa&ntilde;ol</button>
+          <button type="button" data-lang="pt">&#127477;&#127481; Portugu&ecirc;s</button>
+          <button type="button" data-lang="ar">&#127480;&#127462; &#1575;&#1604;&#1593;&#1585;&#1576;&#1610;&#1577;</button>
+          <button type="button" data-lang="yo">&#127475;&#127468; Yor&ugrave;b&aacute;</button>
+          <button type="button" data-lang="de">&#127465;&#127466; Deutsch</button>
+          <button type="button" data-lang="zh-CN">&#127464;&#127475; &#20013;&#25991;</button>
+        </div>
+      </div>
+      <a class="btn btn-sm wa-link" href="https://wa.me/2348169259805" target="_blank" rel="noopener"><svg><use href="#icon-wa"/></svg>WhatsApp</a>
+    </div>
   </div>
 </header>
 
@@ -529,6 +559,41 @@
     if(ctaPhone) ctaPhone.textContent = waDisplay[region];
   }
 
+  function triggerTranslate(code, attempts){
+    attempts = attempts || 0;
+    var select = document.querySelector('#google_translate_element select.goog-te-combo');
+    if(select){
+      select.value = code;
+      select.dispatchEvent(new Event('change'));
+    } else if(attempts < 20){
+      setTimeout(function(){ triggerTranslate(code, attempts+1); }, 250);
+    }
+  }
+
+  function initLangSwitch(){
+    var btn = document.getElementById('langBtn');
+    var menu = document.getElementById('langMenu');
+    var flagEl = document.getElementById('langFlag');
+    var labelEl = document.getElementById('langLabel');
+    if(!btn || !menu) return;
+    btn.addEventListener('click', function(e){
+      e.stopPropagation();
+      menu.classList.toggle('open');
+    });
+    document.addEventListener('click', function(){ menu.classList.remove('open'); });
+    menu.querySelectorAll('button').forEach(function(item){
+      item.addEventListener('click', function(e){
+        e.stopPropagation();
+        var code = item.getAttribute('data-lang');
+        var flag = item.textContent.trim().split(' ')[0];
+        flagEl.textContent = flag;
+        labelEl.textContent = code.split('-')[0].toUpperCase();
+        menu.classList.remove('open');
+        triggerTranslate(code);
+      });
+    });
+  }
+
   function initToggle(){
     var ngCopy="CAC registration is Nigeria specific. Web, app, and software development plus compliance pages work for businesses across the region.";
     var ukCopy="CAC isn't part of what we offer here. Web, app, and software development plus compliance pages for UK and EU businesses.";
@@ -559,6 +624,7 @@
   initParallax();
   initSealScroll();
   initToggle();
+  initLangSwitch();
   updateWhatsAppLinks('ng');
   initPreloader();
 })();
