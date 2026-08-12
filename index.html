@@ -46,6 +46,7 @@
   .brand .seal-mini{width:29px;height:29px;flex:none;}
   .brand .wordmark{font-family:var(--font-mono);font-weight:500;letter-spacing:0.06em;font-size:13px;color:var(--ink-green);white-space:nowrap;}
   .brand .wordmark b{font-weight:700;color:var(--forest);}
+  .region-flag{font-size:15px;line-height:1;margin-left:2px;}
   nav.primary-nav{display:none;gap:28px;}
   nav.primary-nav a{font-size:13.5px;font-weight:600;color:var(--ink-soft);white-space:nowrap;}
   nav.primary-nav a:hover{color:var(--ink-green);}
@@ -95,6 +96,7 @@
   .ledger-row:first-child{border-top:1px solid var(--line);}
   .ledger-row:hover{background:rgba(200,155,74,0.06);}
   .ledger-num{font-family:var(--font-mono);font-size:12px;color:var(--brass);flex:none;width:22px;padding-top:3px;}
+  .ledger-body{min-width:0;}
   .ledger-body h3{font-family:var(--font-display);font-size:17.5px;font-weight:700;color:var(--ink-green);margin-bottom:4px;}
   .ledger-body p{color:var(--ink-soft);font-size:13.8px;line-height:1.55;}
   .ledger-body a{text-decoration:underline;}
@@ -103,6 +105,7 @@
 
   .work-list{max-width:680px;margin:0 auto;}
   .work-row{display:flex;justify-content:space-between;align-items:baseline;gap:16px;padding:24px 4px;border-bottom:1px solid var(--line);}
+  .work-row > div:first-child{min-width:0;}
   .work-row:first-child{border-top:1px solid var(--line);}
   .work-row h3{font-family:var(--font-display);font-size:17.5px;font-weight:700;color:var(--ink-green);}
   .work-row p{color:var(--ink-soft);font-size:13.8px;margin-top:3px;}
@@ -140,10 +143,12 @@
   .footer-bottom{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:12px;}
   .copyright{font-size:11.5px;color:rgba(246,241,228,0.35);}
   #google_translate_element{position:absolute;width:0;height:0;overflow:hidden;opacity:0;pointer-events:none;}
-  .goog-te-banner-frame{display:none !important;}
-  body{top:0 !important;}
+  .goog-te-banner-frame, iframe.goog-te-banner-frame, .goog-te-menu-frame, #goog-gt-tt, .goog-te-balloon-frame{display:none !important;visibility:hidden !important;height:0 !important;}
+  html body{top:0 !important;position:static !important;}
   .goog-tooltip, .goog-tooltip:hover{display:none !important;}
-  .goog-text-highlight{background:none !important;box-shadow:none !important;}
+  .goog-text-highlight{background:none !important;box-shadow:none !important;border:none !important;}
+  .skiptranslate{display:none !important;}
+  #google_translate_element.skiptranslate{position:absolute !important;width:0 !important;height:0 !important;}
 
   .lang-switch{position:relative;flex:none;}
   .header-actions{display:flex;align-items:center;gap:10px;flex:none;}
@@ -171,8 +176,16 @@
     .photo-frame::before{padding-top:120%;}
     .photo-frame.mid::before{padding-top:110%;}
     .mid-photo-label{left:20px;bottom:18px;}
-    .work-row, .ledger-row{flex-wrap:wrap;}
     .wa-float{width:50px;height:50px;bottom:16px;right:16px;}
+    .brand .wordmark{font-size:11.5px;}
+    .header-actions{gap:6px;}
+    .header-actions .btn-sm{display:none;}
+    .lang-btn{padding:8px;}
+    #langLabel{display:none;}
+    .lang-menu{right:-10px;}
+    .index-row{flex-wrap:wrap;row-gap:2px;}
+    .index-row .leader{display:none;}
+    .index-row .desc{white-space:normal;width:100%;color:var(--ink-soft);opacity:0.85;}
   }
   @media (prefers-reduced-motion: reduce){
     html{scroll-behavior:auto;}
@@ -218,6 +231,7 @@
         <polyline points="75,132 75,68 125,132 125,68" fill="none" stroke="#123C2C" stroke-width="11" stroke-linecap="round" stroke-linejoin="round"/>
       </svg>
       <span class="wordmark"><b>NEXUS</b>HOUSENG</span>
+      <span class="region-flag" id="regionFlag" title="Nigeria">&#127475;&#127468;</span>
     </div>
     <nav class="primary-nav" aria-label="Primary">
       <a href="#services">Services</a>
@@ -564,6 +578,11 @@
         ctaPhone.textContent = waDisplay[region];
       }
     }
+    var flagEl = document.getElementById('regionFlag');
+    if(flagEl){
+      if(region === 'uk'){ flagEl.textContent = '\u{1F1EC}\u{1F1E7}'; flagEl.title = 'United Kingdom'; }
+      else { flagEl.textContent = '\u{1F1F3}\u{1F1EC}'; flagEl.title = 'Nigeria'; }
+    }
   }
 
   function triggerTranslate(code, attempts){
@@ -601,29 +620,65 @@
     });
   }
 
-  function initToggle(){
-    var ngCopy="CAC registration is Nigeria specific. Web, app, and software development plus compliance pages work for businesses across the region.";
-    var ukCopy="CAC isn't part of what we offer here. Web, app, and software development plus compliance pages for UK and EU businesses.";
-    var buttons=document.querySelectorAll('.toggle button'), regionCopy=document.getElementById('regionCopy');
-    var panelNg=document.getElementById('panel-ng'), panelUk=document.getElementById('panel-uk');
-    function swap(newPanel, oldPanel, text){
-      oldPanel.style.transition='opacity .2s ease, transform .2s ease'; oldPanel.style.opacity='0'; oldPanel.style.transform='translateY(8px)';
-      regionCopy.style.transition='opacity .2s ease'; regionCopy.style.opacity='0';
-      setTimeout(function(){
-        oldPanel.classList.remove('active'); newPanel.classList.add('active');
-        newPanel.style.transition='none'; newPanel.style.opacity='0'; newPanel.style.transform='translateY(8px)';
-        regionCopy.textContent=text; void newPanel.offsetWidth;
-        newPanel.style.transition='opacity .35s ease, transform .35s ease';
-        requestAnimationFrame(function(){ newPanel.style.opacity='1'; newPanel.style.transform='translateY(0)'; regionCopy.style.opacity='1'; });
-      },220);
+  var ngCopy="CAC registration is Nigeria specific. Web, app, and software development plus compliance pages work for businesses across the region.";
+  var ukCopy="CAC isn't part of what we offer here. Web, app, and software development plus compliance pages for UK and EU businesses.";
+  var currentRegion = 'ng';
+
+  function setRegion(region, instant){
+    if(region === currentRegion && !instant) return;
+    currentRegion = region;
+    var buttons = document.querySelectorAll('.toggle button');
+    var regionCopy = document.getElementById('regionCopy');
+    var panelNg = document.getElementById('panel-ng'), panelUk = document.getElementById('panel-uk');
+    buttons.forEach(function(b){ b.classList.toggle('active', b.getAttribute('data-region')===region); });
+    updateWhatsAppLinks(region);
+    var newPanel = region==='uk' ? panelUk : panelNg;
+    var oldPanel = region==='uk' ? panelNg : panelUk;
+    var text = region==='uk' ? ukCopy : ngCopy;
+    if(instant){
+      oldPanel.classList.remove('active'); newPanel.classList.add('active'); regionCopy.textContent = text;
+      return;
     }
-    buttons.forEach(function(btn){
-      btn.addEventListener('click', function(){
-        buttons.forEach(function(b){ b.classList.remove('active'); }); btn.classList.add('active');
-        var region = btn.getAttribute('data-region');
-        updateWhatsAppLinks(region);
-        if(region==='ng'){ swap(panelNg,panelUk,ngCopy); } else { swap(panelUk,panelNg,ukCopy); }
-      });
+    oldPanel.style.transition='opacity .2s ease, transform .2s ease'; oldPanel.style.opacity='0'; oldPanel.style.transform='translateY(8px)';
+    regionCopy.style.transition='opacity .2s ease'; regionCopy.style.opacity='0';
+    setTimeout(function(){
+      oldPanel.classList.remove('active'); newPanel.classList.add('active');
+      newPanel.style.transition='none'; newPanel.style.opacity='0'; newPanel.style.transform='translateY(8px)';
+      regionCopy.textContent=text; void newPanel.offsetWidth;
+      newPanel.style.transition='opacity .35s ease, transform .35s ease';
+      requestAnimationFrame(function(){ newPanel.style.opacity='1'; newPanel.style.transform='translateY(0)'; regionCopy.style.opacity='1'; });
+    },220);
+  }
+
+  function initToggle(){
+    document.querySelectorAll('.toggle button').forEach(function(btn){
+      btn.addEventListener('click', function(){ setRegion(btn.getAttribute('data-region')); });
+    });
+  }
+
+  function suppressGoogleUI(){
+    document.body.style.top = '0px';
+    document.querySelectorAll('.goog-te-banner-frame, iframe.goog-te-banner-frame, .goog-te-menu-frame, #goog-gt-tt, .goog-tooltip, .goog-te-balloon-frame').forEach(function(el){
+      el.style.display = 'none';
+      el.style.visibility = 'hidden';
+      el.style.height = '0';
+    });
+  }
+
+  function initGeoDetect(){
+    var settled = false;
+    function finish(region){
+      if(settled) return;
+      settled = true;
+      if(region === 'uk'){ setRegion('uk', true); }
+    }
+    var timer = setTimeout(function(){ finish('ng'); }, 2500);
+    fetch('https://ipapi.co/json/').then(function(r){ return r.json(); }).then(function(data){
+      clearTimeout(timer);
+      finish(data && data.country_code === 'GB' ? 'uk' : 'ng');
+    }).catch(function(){
+      clearTimeout(timer);
+      finish('ng');
     });
   }
 
@@ -632,6 +687,8 @@
   initSealScroll();
   initToggle();
   initLangSwitch();
+  initGeoDetect();
+  setInterval(suppressGoogleUI, 500);
   updateWhatsAppLinks('ng');
   initPreloader();
 })();
