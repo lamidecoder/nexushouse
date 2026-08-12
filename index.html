@@ -11,7 +11,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@500;700;900&family=Public+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
   :root{
-    --ink-green:#0B2B21; --forest:#123C2C; --brass:#C89B4A; --brass-light:#E7CC86;
+    --ink-green:#0B2B21; --forest:#123C2C; --brass:#C89B4A; --brass-light:#E7CC86; --brass-text:#8A6428;
     --paper:#F6F1E4; --paper-dim:#EFE7D2; --ink:#1C1A12; --ink-soft:#57543F;
     --line:rgba(28,26,18,0.09); --wa:#25D366;
     --font-display:'Frank Ruhl Libre', Georgia, 'Times New Roman', serif;
@@ -65,7 +65,7 @@
   .btn-sm svg{width:14px;height:14px;}
 
   .hero{padding:88px 0 0;text-align:center;}
-  .eyebrow{font-family:var(--font-mono);font-size:11.5px;letter-spacing:0.14em;color:var(--brass);text-transform:uppercase;margin-bottom:24px;text-align:center;}
+  .eyebrow{font-family:var(--font-mono);font-size:11.5px;letter-spacing:0.14em;color:var(--brass-text);text-transform:uppercase;margin-bottom:24px;text-align:center;}
   .hero h1{font-family:var(--font-display);font-weight:700;font-size:clamp(36px,7vw,70px);line-height:1.05;letter-spacing:-0.015em;margin:0 auto 24px;max-width:11ch;color:var(--ink-green);}
   .word-mask{display:inline-block;overflow:hidden;vertical-align:top;}
   .word-inner{display:inline-block;}
@@ -76,7 +76,7 @@
   .photo-frame::before{content:"";display:block;padding-top:50%;}
   .photo-frame.mid::before{padding-top:42%;}
   .photo-frame .frame-media{position:absolute;inset:0;width:100%;height:100%;transform:scale(1.09);will-change:transform;}
-  .photo-caption{font-family:var(--font-mono);font-size:11px;letter-spacing:0.06em;color:var(--ink-soft);opacity:0.6;text-align:center;margin-top:16px;}
+  .photo-caption{font-family:var(--font-mono);font-size:11px;letter-spacing:0.06em;color:var(--ink-soft);opacity:0.8;text-align:center;margin-top:16px;}
   .mid-photo{margin-top:6px;}
   .mid-photo .wrap{position:relative;}
   .mid-photo-label{position:absolute;left:44px;bottom:30px;color:var(--paper);font-family:var(--font-mono);font-size:12px;letter-spacing:0.1em;text-transform:uppercase;z-index:1;}
@@ -98,7 +98,7 @@
   .ledger-row{display:flex;gap:22px;padding:24px 4px;border-bottom:1px solid var(--line);align-items:baseline;transition:background .2s ease;}
   .ledger-row:first-child{border-top:1px solid var(--line);}
   .ledger-row:hover{background:rgba(200,155,74,0.06);}
-  .ledger-num{font-family:var(--font-mono);font-size:12px;color:var(--brass);flex:none;width:22px;padding-top:3px;}
+  .ledger-num{font-family:var(--font-mono);font-size:12px;color:var(--brass-text);flex:none;width:22px;padding-top:3px;}
   .ledger-body{min-width:0;}
   .ledger-body h3{font-family:var(--font-display);font-size:17.5px;font-weight:700;color:var(--ink-green);margin-bottom:4px;}
   .ledger-body p{color:var(--ink-soft);font-size:13.8px;line-height:1.55;}
@@ -112,15 +112,15 @@
   .work-row:first-child{border-top:1px solid var(--line);}
   .work-row h3{font-family:var(--font-display);font-size:17.5px;font-weight:700;color:var(--ink-green);}
   .work-row p{color:var(--ink-soft);font-size:13.8px;margin-top:3px;}
-  .work-row .link{font-family:var(--font-mono);font-size:12px;color:var(--brass);white-space:nowrap;flex:none;}
-  .work-row .link:hover{text-decoration:underline;}
-  .work-row .tag{font-family:var(--font-mono);font-size:11.5px;color:var(--ink-soft);opacity:.55;white-space:nowrap;flex:none;}
+  .work-row .link{font-family:var(--font-mono);font-size:12px;color:var(--brass-text);white-space:nowrap;flex:none;text-decoration:underline;}
+  .work-row .link:hover{text-decoration:none;}
+  .work-row .tag{font-family:var(--font-mono);font-size:11.5px;color:var(--ink-soft);opacity:.8;white-space:nowrap;flex:none;}
 
   .process{background:var(--paper-dim);}
   .process-list{max-width:620px;margin:0 auto;}
   .process-item{display:flex;gap:20px;padding:24px 0;border-bottom:1px solid var(--line);}
   .process-item:last-child{border-bottom:none;}
-  .process-num{font-family:var(--font-mono);font-weight:500;font-size:12.5px;color:var(--brass);flex:none;width:22px;padding-top:3px;}
+  .process-num{font-family:var(--font-mono);font-weight:500;font-size:12.5px;color:var(--brass-text);flex:none;width:22px;padding-top:3px;}
   .process-item h3{font-family:var(--font-body);font-weight:700;font-size:15.5px;color:var(--ink-green);margin-bottom:5px;}
   .process-item p{color:var(--ink-soft);font-size:13.8px;line-height:1.55;}
 
@@ -135,16 +135,16 @@
   .cta-final p{color:rgba(246,241,228,0.72);max-width:420px;margin:0 auto 28px;font-size:15px;line-height:1.6;}
   .cta-final .phone{font-family:var(--font-mono);font-size:14px;color:var(--brass-light);margin-top:20px;letter-spacing:0.03em;}
 
-  footer{background:#081F17;color:rgba(246,241,228,0.6);padding:44px 0 26px;}
+  footer{background:#081F17;color:rgba(246,241,228,0.78);padding:44px 0 26px;}
   footer .wrap{display:flex;flex-direction:column;gap:22px;}
   .footer-top{display:flex;flex-direction:column;gap:20px;align-items:flex-start;}
   .footer-nav{display:flex;flex-wrap:wrap;gap:18px;}
-  .footer-nav a{font-size:13px;color:rgba(246,241,228,0.65);}
+  .footer-nav a{font-size:13px;color:rgba(246,241,228,0.85);}
   .footer-nav a:hover{color:var(--brass-light);}
   @keyframes idle-spin{to{transform:rotate(360deg);}}
-  .disclaimer{font-size:12px;line-height:1.6;color:rgba(246,241,228,0.4);border-top:1px solid rgba(246,241,228,0.12);padding-top:18px;max-width:620px;}
+  .disclaimer{font-size:12px;line-height:1.6;color:rgba(246,241,228,0.65);border-top:1px solid rgba(246,241,228,0.16);padding-top:18px;max-width:620px;}
   .footer-bottom{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:12px;}
-  .copyright{font-size:11.5px;color:rgba(246,241,228,0.35);}
+  .copyright{font-size:11.5px;color:rgba(246,241,228,0.5);}
   #google_translate_element{position:absolute;width:0;height:0;overflow:hidden;opacity:0;pointer-events:none;}
   .goog-te-banner-frame, iframe.goog-te-banner-frame, .goog-te-menu-frame, #goog-gt-tt, .goog-te-balloon-frame{display:none !important;visibility:hidden !important;height:0 !important;}
   html body{top:0 !important;position:static !important;}
