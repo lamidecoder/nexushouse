@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NexusHouseNG — Business Registration, Compliance &amp; Web Development</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@500;700;900&family=Public+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink-green:#0B2B21; --forest:#123C2C; --brass:#C89B4A; --brass-light:#E7CC86;
+    --paper:#F6F1E4; --paper-dim:#EFE7D2; --ink:#1C1A12; --ink-soft:#57543F;
+    --line:rgba(28,26,18,0.09); --wa:#25D366;
+    --font-display:'Frank Ruhl Libre', Georgia, 'Times New Roman', serif;
+    --font-body:'Public Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    --font-mono:'IBM Plex Mono', 'SF Mono', 'Courier New', monospace;
+    --max:1120px; --ease:cubic-bezier(.16,1,.3,1);
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html{scroll-behavior:smooth;scrollbar-color:var(--brass) var(--paper);scrollbar-width:thin;}
+  ::-webkit-scrollbar{width:10px;}
+  ::-webkit-scrollbar-track{background:var(--paper);}
+  ::-webkit-scrollbar-thumb{background:var(--brass);border-radius:6px;border:2px solid var(--paper);}
+  body{font-family:var(--font-body);background:var(--paper);color:var(--ink);line-height:1.55;-webkit-font-smoothing:antialiased;overflow-x:hidden;}
+  img,svg{display:block;max-width:100%;}
+  a{color:inherit;text-decoration:none;}
+  :focus-visible{outline:2px solid var(--brass);outline-offset:3px;}
+  .wrap{max-width:var(--max);margin:0 auto;padding:0 24px;}
+
+  .preloader{position:fixed;inset:0;z-index:1000;background:var(--ink-green);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;}
+  .preloader-seal{width:88px;height:88px;}
+  .preloader-bar-track{width:150px;height:2px;background:rgba(246,241,228,0.15);position:relative;overflow:hidden;}
+  .preloader-bar-fill{position:absolute;left:0;top:0;bottom:0;width:0%;background:var(--brass);}
+  .preloader-pct{font-family:var(--font-mono);font-size:11px;letter-spacing:0.16em;color:var(--brass-light);}
+  .grain{position:fixed;inset:-50%;width:200%;height:200%;pointer-events:none;z-index:998;opacity:0.025;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    animation:grain-shift 9s steps(8) infinite;}
+  @keyframes grain-shift{0%,100%{transform:translate(0,0);}25%{transform:translate(-2%,3%);}50%{transform:translate(3%,-2%);}75%{transform:translate(-3%,-3%);}}
+
+  .site-header{position:sticky;top:0;z-index:50;background:rgba(246,241,228,0.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);}
+  .site-header .wrap{display:flex;align-items:center;justify-content:space-between;height:70px;gap:12px;}
+  .brand{display:flex;align-items:center;gap:10px;flex:none;}
+  .brand .seal-mini{width:29px;height:29px;flex:none;}
+  .brand .wordmark{font-family:var(--font-mono);font-weight:500;letter-spacing:0.06em;font-size:13px;color:var(--ink-green);white-space:nowrap;}
+  .brand .wordmark b{font-weight:700;color:var(--forest);}
+  nav.primary-nav{display:none;gap:28px;}
+  nav.primary-nav a{font-size:13.5px;font-weight:600;color:var(--ink-soft);white-space:nowrap;}
+  nav.primary-nav a:hover{color:var(--ink-green);}
+  .btn{display:inline-flex;align-items:center;gap:8px;justify-content:center;padding:12px 22px;border-radius:100px;font-family:var(--font-body);font-weight:600;font-size:14px;border:1px solid transparent;cursor:pointer;transition:transform .15s ease, background .2s ease;}
+  .btn:active{transform:scale(.96);}
+  .btn svg{width:16px;height:16px;flex:none;fill:currentColor;}
+  .btn-brass{background:var(--ink-green);color:var(--paper);}
+  .btn-brass:hover{background:#163f2d;}
+  .btn-line{background:transparent;border-color:rgba(28,26,18,0.2);color:var(--ink);}
+  .btn-line:hover{border-color:var(--ink);}
+  .btn-sm{padding:8px 16px;font-size:13px;border-radius:100px;background:var(--ink-green);color:var(--paper);flex:none;}
+  .btn-sm:hover{background:#163f2d;}
+  .btn-sm svg{width:14px;height:14px;}
+
+  .hero{padding:88px 0 0;text-align:center;}
+  .eyebrow{font-family:var(--font-mono);font-size:11.5px;letter-spacing:0.14em;color:var(--brass);text-transform:uppercase;margin-bottom:24px;text-align:center;}
+  .hero h1{font-family:var(--font-display);font-weight:700;font-size:clamp(36px,7vw,70px);line-height:1.05;letter-spacing:-0.015em;margin:0 auto 24px;max-width:11ch;color:var(--ink-green);}
+  .word-mask{display:inline-block;overflow:hidden;vertical-align:top;}
+  .word-inner{display:inline-block;}
+  .hero .sub{font-size:16.5px;color:var(--ink-soft);max-width:440px;margin:0 auto 34px;line-height:1.65;}
+  .hero-ctas{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-bottom:56px;}
+
+  .photo-frame{position:relative;overflow:hidden;border-radius:20px;max-width:var(--max);margin:0 auto;background:linear-gradient(135deg,#163f2d,#0B2B21);}
+  .photo-frame::before{content:"";display:block;padding-top:50%;}
+  .photo-frame.mid::before{padding-top:42%;}
+  .photo-frame .frame-media{position:absolute;inset:0;width:100%;height:100%;transform:scale(1.09);will-change:transform;}
+  .photo-caption{font-family:var(--font-mono);font-size:11px;letter-spacing:0.06em;color:var(--ink-soft);opacity:0.6;text-align:center;margin-top:16px;}
+  .mid-photo{margin-top:6px;}
+  .mid-photo .wrap{position:relative;}
+  .mid-photo-label{position:absolute;left:44px;bottom:30px;color:var(--paper);font-family:var(--font-mono);font-size:12px;letter-spacing:0.1em;text-transform:uppercase;z-index:1;}
+  .photo-frame.mid::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg, rgba(11,43,33,0.1), rgba(11,43,33,0.6));}
+
+  section{padding:104px 0;}
+  .section-head{max-width:520px;margin:0 auto 46px;text-align:center;}
+  .section-head h2{font-family:var(--font-display);font-weight:700;font-size:clamp(26px,3.6vw,38px);color:var(--ink-green);line-height:1.15;}
+  .section-head p{color:var(--ink-soft);font-size:15px;margin-top:12px;}
+
+  .toggle-section{padding-top:0;padding-bottom:0;}
+  .toggle{display:inline-flex;padding:4px;background:var(--paper-dim);border-radius:999px;margin:0 auto 22px;}
+  .toggle-row{display:flex;justify-content:center;}
+  .toggle button{font-family:var(--font-body);font-weight:600;font-size:13.5px;padding:9px 22px;border-radius:999px;border:none;background:transparent;color:var(--ink-soft);cursor:pointer;transition:all .2s ease;}
+  .toggle button.active{background:var(--ink-green);color:var(--paper);}
+  .region-copy{max-width:460px;margin:0 auto;text-align:center;color:var(--ink-soft);font-size:14.5px;min-height:40px;}
+
+  .ledger{max-width:680px;margin:0 auto;}
+  .ledger-row{display:flex;gap:22px;padding:24px 4px;border-bottom:1px solid var(--line);align-items:baseline;transition:background .2s ease;}
+  .ledger-row:first-child{border-top:1px solid var(--line);}
+  .ledger-row:hover{background:rgba(200,155,74,0.06);}
+  .ledger-num{font-family:var(--font-mono);font-size:12px;color:var(--brass);flex:none;width:22px;padding-top:3px;}
+  .ledger-body h3{font-family:var(--font-display);font-size:17.5px;font-weight:700;color:var(--ink-green);margin-bottom:4px;}
+  .ledger-body p{color:var(--ink-soft);font-size:13.8px;line-height:1.55;}
+  .ledger-body a{text-decoration:underline;}
+  .service-panel{display:none;}
+  .service-panel.active{display:block;}
+
+  .work-list{max-width:680px;margin:0 auto;}
+  .work-row{display:flex;justify-content:space-between;align-items:baseline;gap:16px;padding:24px 4px;border-bottom:1px solid var(--line);}
+  .work-row:first-child{border-top:1px solid var(--line);}
+  .work-row h3{font-family:var(--font-display);font-size:17.5px;font-weight:700;color:var(--ink-green);}
+  .work-row p{color:var(--ink-soft);font-size:13.8px;margin-top:3px;}
+  .work-row .link{font-family:var(--font-mono);font-size:12px;color:var(--brass);white-space:nowrap;flex:none;}
+  .work-row .link:hover{text-decoration:underline;}
+  .work-row .tag{font-family:var(--font-mono);font-size:11.5px;color:var(--ink-soft);opacity:.55;white-space:nowrap;flex:none;}
+
+  .process{background:var(--paper-dim);}
+  .process-list{max-width:620px;margin:0 auto;}
+  .process-item{display:flex;gap:20px;padding:24px 0;border-bottom:1px solid var(--line);}
+  .process-item:last-child{border-bottom:none;}
+  .process-num{font-family:var(--font-mono);font-weight:500;font-size:12.5px;color:var(--brass);flex:none;width:22px;padding-top:3px;}
+  .process-item h3{font-family:var(--font-body);font-weight:700;font-size:15.5px;color:var(--ink-green);margin-bottom:5px;}
+  .process-item p{color:var(--ink-soft);font-size:13.8px;line-height:1.55;}
+
+  .index-list{max-width:600px;margin:0 auto;}
+  .index-row{display:flex;align-items:baseline;gap:10px;padding:14px 0;border-bottom:1px solid var(--line);}
+  .index-row .name{font-family:var(--font-display);font-weight:700;color:var(--ink-green);font-size:15px;white-space:nowrap;}
+  .index-row .leader{flex:1;border-bottom:1px dotted rgba(28,26,18,0.25);height:0;transform:translateY(-5px);}
+  .index-row .desc{color:var(--ink-soft);font-size:12.5px;white-space:nowrap;}
+
+  .cta-final{background:var(--ink-green);color:var(--paper);text-align:center;padding:104px 0 84px;}
+  .cta-final h2{font-family:var(--font-display);font-weight:700;font-size:clamp(28px,4vw,44px);margin-bottom:16px;}
+  .cta-final p{color:rgba(246,241,228,0.72);max-width:420px;margin:0 auto 28px;font-size:15px;line-height:1.6;}
+  .cta-final .phone{font-family:var(--font-mono);font-size:14px;color:var(--brass-light);margin-top:20px;letter-spacing:0.03em;}
+
+  footer{background:#081F17;color:rgba(246,241,228,0.6);padding:44px 0 26px;}
+  footer .wrap{display:flex;flex-direction:column;gap:22px;}
+  .footer-top{display:flex;flex-direction:column;gap:20px;align-items:flex-start;}
+  .footer-nav{display:flex;flex-wrap:wrap;gap:18px;}
+  .footer-nav a{font-size:13px;color:rgba(246,241,228,0.65);}
+  .footer-nav a:hover{color:var(--brass-light);}
+  @keyframes idle-spin{to{transform:rotate(360deg);}}
+  .disclaimer{font-size:12px;line-height:1.6;color:rgba(246,241,228,0.4);border-top:1px solid rgba(246,241,228,0.12);padding-top:18px;max-width:620px;}
+  .footer-bottom{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:12px;}
+  .copyright{font-size:11.5px;color:rgba(246,241,228,0.35);}
+  #google_translate_element{font-size:12px;}
+  #google_translate_element .goog-te-gadget{font-family:var(--font-mono) !important;color:rgba(246,241,228,0.5) !important;font-size:11px !important;}
+  .goog-te-gadget img{display:none !important;}
+
+  .wa-float{position:fixed;bottom:22px;right:22px;width:56px;height:56px;border-radius:50%;background:var(--wa);display:flex;align-items:center;justify-content:center;box-shadow:0 10px 24px rgba(0,0,0,0.3);z-index:60;transition:transform .2s ease;}
+  .wa-float:hover{transform:scale(1.08);}
+  .wa-float svg{width:26px;height:26px;fill:#fff;}
+
+  @media(min-width:900px){
+    nav.primary-nav{display:flex;}
+    .footer-top{flex-direction:row;justify-content:space-between;align-items:center;}
+  }
+  @media(max-width:640px){
+    .wrap{padding:0 18px;}
+    section{padding:72px 0;}
+    .hero{padding:56px 0 0;}
+    .hero-ctas{margin-bottom:40px;}
+    .photo-frame{border-radius:14px;}
+    .photo-frame::before{padding-top:120%;}
+    .photo-frame.mid::before{padding-top:110%;}
+    .mid-photo-label{left:20px;bottom:18px;}
+    .work-row, .ledger-row{flex-wrap:wrap;}
+    .wa-float{width:50px;height:50px;bottom:16px;right:16px;}
+  }
+  @media (prefers-reduced-motion: reduce){
+    html{scroll-behavior:auto;}
+    .grain{animation:none !important;}
+    .preloader-seal{animation:none !important;}
+  }
+</style>
+</head>
+<body>
+
+<div class="preloader" id="preloader">
+  <svg class="preloader-seal" viewBox="0 0 200 200" aria-hidden="true">
+    <circle cx="100" cy="100" r="94" fill="none" stroke="#C89B4A" stroke-width="3" stroke-dasharray="4 7"/>
+    <circle cx="100" cy="100" r="78" fill="none" stroke="#F6F1E4" stroke-width="1.5"/>
+    <polyline points="75,132 75,68 125,132 125,68" fill="none" stroke="#F6F1E4" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>
+  <div class="preloader-bar-track"><div class="preloader-bar-fill" id="preloaderFill"></div></div>
+  <div class="preloader-pct" id="preloaderPct">0%</div>
+</div>
+<script>
+  window.__preloaderHidden = false;
+  function hidePreloader(){
+    if(window.__preloaderHidden) return;
+    window.__preloaderHidden = true;
+    var pre = document.getElementById('preloader');
+    if(pre){ pre.style.transition='opacity .4s ease'; pre.style.opacity='0'; setTimeout(function(){ pre.style.display='none'; }, 420); }
+  }
+  setTimeout(function(){ hidePreloader(); if(typeof initHeroIntro==='function'){ initHeroIntro(); } }, 4000);
+</script>
+
+<div class="grain"></div>
+
+<svg width="0" height="0" style="position:absolute">
+  <symbol id="icon-wa" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12c0 1.85.5 3.58 1.38 5.07L2 22l5.07-1.33A9.94 9.94 0 0012 22c5.52 0 10-4.48 10-10S17.52 2 12 2zm0 18c-1.6 0-3.09-.46-4.35-1.26l-.31-.19-3.01.79.8-2.93-.2-.32A7.94 7.94 0 014 12c0-4.41 3.59-8 8-8s8 3.59 8 8-3.59 8-8 8zm4.4-5.6c-.24-.12-1.43-.71-1.65-.79-.22-.08-.38-.12-.54.12-.16.24-.62.79-.76.95-.14.16-.28.18-.52.06-.24-.12-1.01-.37-1.93-1.19-.71-.63-1.19-1.42-1.33-1.66-.14-.24-.01-.37.11-.49.11-.11.24-.28.36-.42.12-.14.16-.24.24-.4.08-.16.04-.3-.02-.42-.06-.12-.54-1.3-.74-1.78-.19-.46-.39-.4-.54-.4-.14 0-.3-.02-.46-.02-.16 0-.42.06-.64.3-.22.24-.84.82-.84 2s.86 2.32.98 2.48c.12.16 1.7 2.6 4.12 3.64.58.25 1.03.4 1.38.51.58.18 1.11.16 1.53.1.47-.07 1.43-.58 1.63-1.14.2-.56.2-1.04.14-1.14-.06-.1-.22-.16-.46-.28z"/></symbol>
+</svg>
+
+<header class="site-header">
+  <div class="wrap">
+    <div class="brand">
+      <svg class="seal-mini" id="headerSeal" viewBox="0 0 200 200" aria-hidden="true">
+        <circle cx="100" cy="100" r="94" fill="none" stroke="#123C2C" stroke-width="3" stroke-dasharray="4 7"/>
+        <circle cx="100" cy="100" r="78" fill="none" stroke="#123C2C" stroke-width="2"/>
+        <polyline points="75,132 75,68 125,132 125,68" fill="none" stroke="#123C2C" stroke-width="11" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <span class="wordmark"><b>NEXUS</b>HOUSENG</span>
+    </div>
+    <nav class="primary-nav" aria-label="Primary">
+      <a href="#services">Services</a>
+      <a href="#work">Work</a>
+      <a href="#compliance">Compliance</a>
+      <a href="#process">Process</a>
+    </nav>
+    <a class="btn btn-sm wa-link" href="https://wa.me/2348169259805" target="_blank" rel="noopener"><svg><use href="#icon-wa"/></svg>WhatsApp</a>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="wrap">
+    <p class="eyebrow">CAC Registration &middot; App &amp; Software Development &middot; Compliance</p>
+    <h1>
+      <span class="word-mask"><span class="word-inner">The</span></span> <span class="word-mask"><span class="word-inner">certificate.</span></span><br>
+      <span class="word-mask"><span class="word-inner">The</span></span> <span class="word-mask"><span class="word-inner">product.</span></span><br>
+      <span class="word-mask"><span class="word-inner">The</span></span> <span class="word-mask"><span class="word-inner">fine</span></span> <span class="word-mask"><span class="word-inner">print.</span></span>
+    </h1>
+    <p class="sub">Most people end up handling these separately, and usually badly: CAC paperwork from one person, a website or app from another, compliance pages from nobody at all. We do it all together.</p>
+    <div class="hero-ctas">
+      <a class="btn btn-brass wa-link" href="https://wa.me/2348169259805" target="_blank" rel="noopener"><svg><use href="#icon-wa"/></svg>Start on WhatsApp</a>
+      <a class="btn btn-line" href="#services">See what's included</a>
+    </div>
+  </div>
+  <div class="wrap">
+    <div class="photo-frame" id="heroPhoto">
+      <svg class="frame-media" viewBox="0 0 800 400" preserveAspectRatio="xMidYMid slice" role="img" aria-label="An illustrated certificate with a wax seal">
+        <rect width="800" height="400" fill="#0B2B21"/>
+        <rect width="800" height="400" fill="url(#heroGrad)"/>
+        <defs>
+          <radialGradient id="heroGrad" cx="30%" cy="30%" r="80%">
+            <stop offset="0%" stop-color="#1c4632"/>
+            <stop offset="100%" stop-color="#0B2B21"/>
+          </radialGradient>
+          <filter id="cardShadow" x="-30%" y="-30%" width="160%" height="160%">
+            <feDropShadow dx="0" dy="14" stdDeviation="18" flood-color="#000" flood-opacity="0.35"/>
+          </filter>
+        </defs>
+        <g transform="translate(330,215) rotate(-8)" filter="url(#cardShadow)">
+          <rect x="-190" y="-120" width="330" height="210" rx="4" fill="#EFE7D2" opacity="0.9"/>
+        </g>
+        <g transform="translate(360,205) rotate(-4)" filter="url(#cardShadow)">
+          <rect x="-190" y="-120" width="330" height="210" rx="4" fill="#F6F1E4"/>
+          <rect x="-160" y="-78" width="180" height="7" rx="2" fill="#0B2B21" opacity="0.16"/>
+          <rect x="-160" y="-56" width="230" height="7" rx="2" fill="#0B2B21" opacity="0.1"/>
+          <rect x="-160" y="-34" width="150" height="7" rx="2" fill="#0B2B21" opacity="0.1"/>
+          <rect x="-160" y="66" width="120" height="6" rx="2" fill="#0B2B21" opacity="0.12"/>
+        </g>
+        <g transform="translate(455,255)">
+          <circle r="62" fill="#F6F1E4"/>
+          <circle r="62" fill="none" stroke="#C89B4A" stroke-width="3" stroke-dasharray="4 7"/>
+          <circle r="48" fill="none" stroke="#0B2B21" stroke-width="1.5" opacity="0.5"/>
+          <g stroke="#0B2B21" stroke-width="1.4" opacity="0.4">
+            <line x1="0" y1="-40" x2="0" y2="-32" transform="rotate(30)"/>
+            <line x1="0" y1="-40" x2="0" y2="-32" transform="rotate(60)"/>
+            <line x1="0" y1="-40" x2="0" y2="-32" transform="rotate(120)"/>
+            <line x1="0" y1="-40" x2="0" y2="-32" transform="rotate(150)"/>
+            <line x1="0" y1="-40" x2="0" y2="-32" transform="rotate(210)"/>
+            <line x1="0" y1="-40" x2="0" y2="-32" transform="rotate(240)"/>
+            <line x1="0" y1="-40" x2="0" y2="-32" transform="rotate(300)"/>
+            <line x1="0" y1="-40" x2="0" y2="-32" transform="rotate(330)"/>
+          </g>
+          <polyline points="-17,34 -17,-26 17,34 17,-26" fill="none" stroke="#0B2B21" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+        </g>
+        <circle cx="120" cy="90" r="2" fill="#C89B4A" opacity="0.5"/>
+        <circle cx="150" cy="120" r="2" fill="#C89B4A" opacity="0.3"/>
+        <circle cx="640" cy="100" r="2" fill="#C89B4A" opacity="0.4"/>
+        <circle cx="670" cy="320" r="2" fill="#C89B4A" opacity="0.4"/>
+      </svg>
+    </div>
+    <p class="photo-caption">FILE NO. NHNG/2026/0147</p>
+  </div>
+</section>
+
+<section class="toggle-section">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <p class="eyebrow">Who this is for</p>
+      <h2>Where's your business?</h2>
+    </div>
+    <div class="toggle-row">
+      <div class="toggle">
+        <button type="button" class="active" data-region="ng">Africa</button>
+        <button type="button" data-region="uk">Europe</button>
+      </div>
+    </div>
+    <p class="region-copy" id="regionCopy">CAC registration is Nigeria specific. Web, app, and software development plus compliance pages work for businesses across the region.</p>
+  </div>
+</section>
+
+<section class="services" id="services">
+  <div class="wrap">
+    <div id="panel-ng" class="service-panel active">
+      <div class="ledger">
+        <div class="ledger-row reveal"><span class="ledger-num">01</span><div class="ledger-body"><h3>Business Name Registration</h3><p>Sole proprietorship and partnership names, search through certificate.</p></div></div>
+        <div class="ledger-row reveal"><span class="ledger-num">02</span><div class="ledger-body"><h3>Company / LTD Registration</h3><p>Private limited companies, memorandum and articles included.</p></div></div>
+        <div class="ledger-row reveal"><span class="ledger-num">03</span><div class="ledger-body"><h3>Documentation &amp; Filing</h3><p>Forms prepared and checked before anything gets submitted.</p></div></div>
+        <div class="ledger-row reveal"><span class="ledger-num">04</span><div class="ledger-body"><h3>Status Tracking</h3><p>Where things stand, without you having to ask.</p></div></div>
+        <div class="ledger-row reveal"><span class="ledger-num">05</span><div class="ledger-body"><h3>Website Development</h3><p>Built around what the business actually does, not a template.</p></div></div>
+        <div class="ledger-row reveal"><span class="ledger-num">06</span><div class="ledger-body"><h3>Mobile App Development</h3><p>iOS and Android, from design through to app store.</p></div></div>
+        <div class="ledger-row reveal"><span class="ledger-num">07</span><div class="ledger-body"><h3>Software Development</h3><p>Custom systems and tools built for how the business actually runs.</p></div></div>
+        <div class="ledger-row reveal"><span class="ledger-num">08</span><div class="ledger-body"><h3>Compliance Pages</h3><p>Covered in full <a href="#compliance">below</a>.</p></div></div>
+      </div>
+    </div>
+    <div id="panel-uk" class="service-panel">
+      <div class="ledger">
+        <div class="ledger-row reveal"><span class="ledger-num">01</span><div class="ledger-body"><h3>Website Development</h3><p>Built to represent the business properly, wherever the customers are.</p></div></div>
+        <div class="ledger-row reveal"><span class="ledger-num">02</span><div class="ledger-body"><h3>Mobile App Development</h3><p>iOS and Android apps, scoped to what's actually needed.</p></div></div>
+        <div class="ledger-row reveal"><span class="ledger-num">03</span><div class="ledger-body"><h3>Software Development</h3><p>Custom tools and systems, built and supported properly.</p></div></div>
+        <div class="ledger-row reveal"><span class="ledger-num">04</span><div class="ledger-body"><h3>E-commerce</h3><p>Product pages through checkout, set up to convert.</p></div></div>
+        <div class="ledger-row reveal"><span class="ledger-num">05</span><div class="ledger-body"><h3>Compliance Pages</h3><p>Written for UK and EU expectations. Covered in full <a href="#compliance">below</a>.</p></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="work" id="work">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <p class="eyebrow">Proof, not promises</p>
+      <h2>A few things we've shipped</h2>
+    </div>
+    <div class="work-list">
+      <div class="work-row reveal"><div><h3>Withcent Global</h3><p>A complete site for an education consultancy, built on Next.js.</p></div><a class="link" href="https://wcent.vercel.app" target="_blank" rel="noopener">Visit &#8599;</a></div>
+      <div class="work-row reveal"><div><h3>Bookam</h3><p>A booking platform for hotels, shortlets, and events.</p></div><a class="link" href="https://bookamfast.com" target="_blank" rel="noopener">Visit &#8599;</a></div>
+      <div class="work-row reveal"><div><h3>Displyn</h3><p>A mobile app built end to end for a UK client, from design to launch.</p></div><span class="tag">iOS &amp; Android</span></div>
+      <div class="work-row reveal"><div><h3>DropOS</h3><p>An AI-powered commerce platform, co-founded and built from the ground up.</p></div><a class="link" href="https://droposhq.com" target="_blank" rel="noopener">Visit &#8599;</a></div>
+      <div class="work-row reveal"><div><h3>FZShotit</h3><p>A portfolio site for a London-based photographer.</p></div><a class="link" href="https://fzshotit.com" target="_blank" rel="noopener">Visit &#8599;</a></div>
+    </div>
+  </div>
+</section>
+
+<div class="mid-photo">
+  <div class="wrap">
+    <div class="photo-frame mid" id="midPhoto">
+      <svg class="frame-media" viewBox="0 0 800 340" preserveAspectRatio="xMidYMid slice" role="img" aria-label="An illustrated code editor window">
+        <rect width="800" height="340" fill="#0B2B21"/>
+        <g transform="translate(120,55)">
+          <rect width="560" height="230" rx="10" fill="#0F3324" stroke="#1c4a35" stroke-width="1"/>
+          <rect width="560" height="34" rx="10" fill="#123C2C"/>
+          <rect y="18" width="560" height="16" fill="#123C2C"/>
+          <circle cx="20" cy="17" r="5" fill="#C89B4A" opacity="0.7"/>
+          <circle cx="38" cy="17" r="5" fill="#E7CC86" opacity="0.7"/>
+          <circle cx="56" cy="17" r="5" fill="#F6F1E4" opacity="0.45"/>
+          <g fill="none" stroke-linecap="round">
+            <rect x="30" y="60" width="80" height="7" rx="3" fill="#C89B4A" opacity="0.75"/>
+            <rect x="120" y="60" width="150" height="7" rx="3" fill="#F6F1E4" opacity="0.35"/>
+            <rect x="50" y="84" width="190" height="7" rx="3" fill="#F6F1E4" opacity="0.32"/>
+            <rect x="50" y="108" width="130" height="7" rx="3" fill="#E7CC86" opacity="0.55"/>
+            <rect x="190" y="108" width="90" height="7" rx="3" fill="#F6F1E4" opacity="0.28"/>
+            <rect x="30" y="132" width="60" height="7" rx="3" fill="#C89B4A" opacity="0.75"/>
+            <rect x="100" y="132" width="210" height="7" rx="3" fill="#F6F1E4" opacity="0.3"/>
+            <rect x="50" y="156" width="170" height="7" rx="3" fill="#F6F1E4" opacity="0.32"/>
+            <rect x="50" y="180" width="110" height="7" rx="3" fill="#E7CC86" opacity="0.55"/>
+            <rect x="30" y="204" width="40" height="7" rx="3" fill="#C89B4A" opacity="0.6"/>
+          </g>
+          <rect x="291" y="107" width="2" height="10" fill="#F6F1E4" opacity="0.8"/>
+        </g>
+      </svg>
+      <span class="mid-photo-label">Software &amp; App Development</span>
+    </div>
+  </div>
+</div>
+
+<section class="process" id="process">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <p class="eyebrow">Process</p>
+      <h2>How a job runs</h2>
+    </div>
+    <div class="process-list">
+      <div class="process-item reveal"><span class="process-num">01</span><div><h3>Message on WhatsApp</h3><p>What you need, in your own words.</p></div></div>
+      <div class="process-item reveal"><span class="process-num">02</span><div><h3>We scope it</h3><p>What's involved and what it costs, before anything starts.</p></div></div>
+      <div class="process-item reveal"><span class="process-num">03</span><div><h3>We build and file</h3><p>Registration and the build move at the same time, where that's possible.</p></div></div>
+      <div class="process-item reveal"><span class="process-num">04</span><div><h3>Everything lands together</h3><p>Certificate, product, and compliance pages.</p></div></div>
+    </div>
+  </div>
+</section>
+
+<section class="compliance" id="compliance">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <p class="eyebrow">The small print</p>
+      <h2>Pages people forget exist, until they need them</h2>
+    </div>
+    <div class="index-list">
+      <div class="index-row reveal"><span class="name">Privacy Policy</span><span class="leader"></span><span class="desc">how data is collected and used</span></div>
+      <div class="index-row reveal"><span class="name">Cookie Policy</span><span class="leader"></span><span class="desc">what's tracked, and the consent to match</span></div>
+      <div class="index-row reveal"><span class="name">Terms &amp; Conditions</span><span class="leader"></span><span class="desc">the rules for using the site</span></div>
+      <div class="index-row reveal"><span class="name">Disclaimer</span><span class="leader"></span><span class="desc">where liability ends</span></div>
+      <div class="index-row reveal"><span class="name">Refund Policy</span><span class="leader"></span><span class="desc">eligibility and process</span></div>
+      <div class="index-row reveal"><span class="name">Data Protection</span><span class="leader"></span><span class="desc">aligned with NDPR and GDPR</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="cta-final" id="contact">
+  <div class="wrap">
+    <h2 class="reveal">Send the first message</h2>
+    <p class="reveal">WhatsApp is where this starts. Say what you need and we'll scope it from there.</p>
+    <a class="btn reveal wa-link" style="background:var(--brass);color:var(--ink-green);" href="https://wa.me/2348169259805" target="_blank" rel="noopener"><svg><use href="#icon-wa"/></svg>Chat on WhatsApp</a>
+    <p class="phone reveal" id="ctaPhone">0816 925 9805</p>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="footer-top">
+      <div class="brand">
+        <svg class="seal-mini" viewBox="0 0 200 200" aria-hidden="true">
+          <circle cx="100" cy="100" r="94" fill="none" stroke="#C89B4A" stroke-width="3" stroke-dasharray="4 7"/>
+          <circle cx="100" cy="100" r="78" fill="none" stroke="#F6F1E4" stroke-width="1.5"/>
+          <polyline points="75,132 75,68 125,132 125,68" fill="none" stroke="#F6F1E4" stroke-width="11" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <span class="wordmark" style="color:#F6F1E4;"><b style="color:#C89B4A;">NEXUS</b>HOUSENG</span>
+      </div>
+      <div class="footer-nav">
+        <a href="#services">Services</a>
+        <a href="#work">Work</a>
+        <a href="#compliance">Compliance</a>
+        <a class="wa-link" href="https://wa.me/2348169259805" target="_blank" rel="noopener">WhatsApp</a>
+      </div>
+    </div>
+    <p class="disclaimer">NexusHouseNG provides business documentation and registration support and is not a law firm. Filings are prepared based on client instructions and reviewed with the client before submission.</p>
+    <div class="footer-bottom">
+      <p class="copyright">&copy; 2026 NexusHouseNG. All rights reserved.</p>
+      <div id="google_translate_element"></div>
+    </div>
+  </div>
+</footer>
+
+<a class="wa-float wa-link" href="https://wa.me/2348169259805" target="_blank" rel="noopener" aria-label="Chat on WhatsApp"><svg><use href="#icon-wa"/></svg></a>
+
+<script>
+  function googleTranslateElementInit(){
+    try{ new google.translate.TranslateElement({pageLanguage:'en', autoDisplay:false}, 'google_translate_element'); }catch(e){}
+  }
+</script>
+<script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit" async defer></script>
+
+<script>
+(function(){
+  var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  window.initHeroIntro = function(){
+    if(reduced) return;
+    var words = document.querySelectorAll('.hero h1 .word-inner');
+    var rest = [document.querySelector('.hero .sub')]
+      .concat(Array.prototype.slice.call(document.querySelectorAll('.hero-ctas .btn')))
+      .concat([document.getElementById('heroPhoto')]);
+    words.forEach(function(w,i){
+      w.style.transform = 'translateY(110%)';
+      w.style.transition = 'transform .75s cubic-bezier(.16,1,.3,1) '+(i*0.05).toFixed(2)+'s';
+    });
+    rest.forEach(function(el,i){
+      if(!el) return;
+      el.style.opacity='0'; el.style.transform=(el.id==='heroPhoto')?'translateY(24px)':'translateY(14px)';
+      el.style.transition = 'opacity .7s ease '+(0.3+i*0.08).toFixed(2)+'s, transform .7s cubic-bezier(.16,1,.3,1) '+(0.3+i*0.08).toFixed(2)+'s';
+    });
+    requestAnimationFrame(function(){ requestAnimationFrame(function(){
+      words.forEach(function(w){ w.style.transform='translateY(0)'; });
+      rest.forEach(function(el){ if(el){ el.style.opacity='1'; el.style.transform='translateY(0)'; } });
+    }); });
+  };
+
+  function initPreloader(){
+    var fill=document.getElementById('preloaderFill'), pct=document.getElementById('preloaderPct');
+    if(reduced){ hidePreloader(); window.initHeroIntro(); return; }
+    var start=null, duration=850;
+    function step(ts){
+      if(!start) start=ts;
+      var p=Math.min(1,(ts-start)/duration), eased=1-Math.pow(1-p,3), val=Math.round(eased*100);
+      if(pct) pct.textContent=val+'%';
+      if(fill) fill.style.width=val+'%';
+      if(p<1){ requestAnimationFrame(step); } else { setTimeout(function(){ hidePreloader(); window.initHeroIntro(); },100); }
+    }
+    requestAnimationFrame(step);
+  }
+
+  function initParallax(){
+    if(reduced) return;
+    var imgs = document.querySelectorAll('.photo-frame .frame-media');
+    function onScroll(){
+      imgs.forEach(function(img){
+        var rect = img.parentElement.getBoundingClientRect();
+        var center = rect.top + rect.height/2 - window.innerHeight/2;
+        var shift = Math.max(-30, Math.min(30, -center*0.06));
+        img.style.transform = 'scale(1.09) translateY('+shift.toFixed(1)+'px)';
+      });
+    }
+    window.addEventListener('scroll', onScroll, {passive:true}); onScroll();
+  }
+
+  function initSealScroll(){
+    var headerSeal=document.getElementById('headerSeal');
+    if(!headerSeal) return;
+    function onScroll(){
+      var st=window.scrollY, dh=document.documentElement.scrollHeight-window.innerHeight;
+      headerSeal.style.transform='rotate('+((dh>0?st/dh:0)*360)+'deg)';
+    }
+    window.addEventListener('scroll', onScroll, {passive:true}); onScroll();
+  }
+
+  function initScrollReveals(){
+    var els=document.querySelectorAll('.reveal');
+    if(reduced || !('IntersectionObserver' in window)){ els.forEach(function(el){ el.style.opacity=1; }); return; }
+    els.forEach(function(el){ el.style.opacity='0'; el.style.transform='translateY(18px)'; el.style.transition='opacity .7s ease, transform .7s ease'; });
+    var io=new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        if(entry.isIntersecting){ entry.target.style.opacity='1'; entry.target.style.transform='translateY(0)'; io.unobserve(entry.target); }
+      });
+    },{threshold:0.12});
+    els.forEach(function(el){ io.observe(el); });
+  }
+
+  var waNumbers = { ng:'2348169259805', uk:'447427218252' };
+  var waDisplay = { ng:'0816 925 9805', uk:'+44 7427 218252' };
+  function updateWhatsAppLinks(region){
+    document.querySelectorAll('.wa-link').forEach(function(a){ a.href = 'https://wa.me/' + waNumbers[region]; });
+    var ctaPhone = document.getElementById('ctaPhone');
+    if(ctaPhone) ctaPhone.textContent = waDisplay[region];
+  }
+
+  function initToggle(){
+    var ngCopy="CAC registration is Nigeria specific. Web, app, and software development plus compliance pages work for businesses across the region.";
+    var ukCopy="CAC isn't part of what we offer here. Web, app, and software development plus compliance pages for UK and EU businesses.";
+    var buttons=document.querySelectorAll('.toggle button'), regionCopy=document.getElementById('regionCopy');
+    var panelNg=document.getElementById('panel-ng'), panelUk=document.getElementById('panel-uk');
+    function swap(newPanel, oldPanel, text){
+      oldPanel.style.transition='opacity .2s ease, transform .2s ease'; oldPanel.style.opacity='0'; oldPanel.style.transform='translateY(8px)';
+      regionCopy.style.transition='opacity .2s ease'; regionCopy.style.opacity='0';
+      setTimeout(function(){
+        oldPanel.classList.remove('active'); newPanel.classList.add('active');
+        newPanel.style.transition='none'; newPanel.style.opacity='0'; newPanel.style.transform='translateY(8px)';
+        regionCopy.textContent=text; void newPanel.offsetWidth;
+        newPanel.style.transition='opacity .35s ease, transform .35s ease';
+        requestAnimationFrame(function(){ newPanel.style.opacity='1'; newPanel.style.transform='translateY(0)'; regionCopy.style.opacity='1'; });
+      },220);
+    }
+    buttons.forEach(function(btn){
+      btn.addEventListener('click', function(){
+        buttons.forEach(function(b){ b.classList.remove('active'); }); btn.classList.add('active');
+        var region = btn.getAttribute('data-region');
+        updateWhatsAppLinks(region);
+        if(region==='ng'){ swap(panelNg,panelUk,ngCopy); } else { swap(panelUk,panelNg,ukCopy); }
+      });
+    });
+  }
+
+  initScrollReveals();
+  initParallax();
+  initSealScroll();
+  initToggle();
+  updateWhatsAppLinks('ng');
+  initPreloader();
+})();
+</script>
+
+</body>
+</html>
